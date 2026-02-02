@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Jujutsu Sorcerer - ID & Sheet</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root {
+    --bg-main: #0a0a0f;
+    --bg-header: #13131a;
+    --accent: #5e3aa8;
+    --accent-hover: #7a4ecc;
+    --accent-active: #9d4edd;
+    --text-main: #e0e0e8;
+    --text-glow: #c79eff;
+    --card-bg: rgba(20,18,32,0.65);
+    --card-inner-bg: color-mix(in srgb, var(--bg-main) 70%, #000);
+    --border-subtle: rgba(138,92,214,0.25);
+    --input-bg: rgba(25,20,40,0.7);
+    --input-border: #4a2a8a;
+    --glow-strong: color-mix(in srgb, var(--text-glow) 75%, white);
+    --shadow-accent: color-mix(in srgb, var(--accent) 40%, transparent);
+  }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg-main);
+    color: var(--text-main);
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+  header {
+    background: var(--bg-header);
+    padding: 16px 32px;
+    border-bottom: 2px solid var(--accent);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 20px var(--shadow-accent);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  header h1 {
+    margin: 0;
+    font-size: 26px;
+    color: var(--text-glow);
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px var(--glow-strong);
+  }
+  .page-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .page-buttons button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+  }
+  .page-buttons button:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+  }
+  .page-buttons button.active {
+    background: var(--accent-active);
+    box-shadow: 0 0 20px var(--glow-strong);
+  }
+  #settings-btn {
+    background: transparent;
+    color: var(--text-glow);
+    font-size: 22px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: all 0.2s;
+  }
+  #settings-btn:hover {
+    opacity: 1;
+    background: color-mix(in srgb, var(--accent) 25%, transparent);
+  }
+  .container {
+    padding: 32px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .hidden { display: none !important; }
+  .panel {
+    background: var(--card-bg);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 12px 40px var(--shadow-accent);
+    margin-bottom: 32px;
+  }
+  .panel h2 {
+    margin: 0 0 20px 0;
+    font-size: 22px;
+    color: var(--text-glow);
+    text-shadow: 0 0 12px var(--glow-strong);
+    border-bottom: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
+    padding-bottom: 10px;
+    position: relative;
+  }
+  .panel h2::after {
+    content: "✦";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: var(--accent-active);
+    opacity: 0.7;
+  }
+
+  .health-display {
+    font-size: 1.4rem;
+    text-align: center;
+    padding: 24px;
+    background: rgba(94,58,168,0.2);
+    border-radius: 12px;
+    border: 1px solid var(--border-subtle);
+    margin-bottom: 24px;
+  }
+  .health-display strong {
+    font-size: 3rem;
+    color: #e53935;
+    text-shadow: 0 0 16px #ef5350;
+  }
+  .health-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+  .health-btn {
+    padding: 12px 24px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 110px;
+  }
+  .health-btn.take-dmg { background: #c62828; color: white; }
+  .health-btn.heal-btn { background: #2e7d32; color: white; }
+  .health-btn.rest-btn { background: var(--accent-active); color: white; }
+  .health-btn:hover { transform: translateY(-2px); }
+
+  /* Settings Page Styles */
+  .theme-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .theme-option {
+    padding: 18px;
+    background: rgba(94,58,168,0.35);
+    border: 1px solid transparent;
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: 600;
+    transition: all 0.3s;
+  }
+  .theme-option:hover {
+    background: color-mix(in srgb, var(--accent-hover) 65%, transparent);
+    border-color: var(--accent-active);
+    transform: translateY(-4px);
+  }
+  .theme-option.active {
+    background: var(--accent-active);
+    color: white;
+    box-shadow: 0 0 20px var(--glow-strong);
+    border-color: var(--accent-active);
+  }
+  .settings-section {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .formula-row {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 16px;
+    align-items: center;
+    margin: 20px 0;
+  }
+  .formula-row label {
+    font-weight: 500;
+    opacity: 0.9;
+  }
+  .formula-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .formula-options label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .fixed-input {
+    width: 120px;
+    margin-left: 24px;
+  }
+  .export-import-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 24px 0;
+  }
+  .export-import-row button {
+    padding: 12px 24px;
+    font-weight: 600;
+  }
+  #importFile {
+    display: none;
+  }
+  #importStatus {
+    opacity: 0.8;
+    font-style: italic;
+  }
+  .color-row {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 16px;
+    align-items: center;
+    margin: 16px 0;
+  }
+  .color-row label {
+    font-weight: 500;
+    opacity: 0.9;
+  }
+  .custom-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 32px;
+    justify-content: center;
+  }
+  .custom-buttons button {
+    padding: 12px 28px;
+    font-weight: 600;
+  }
+
+  .ability-group {
+    background: rgba(94,58,168,0.1);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 16px 0;
+  }
+  .ability-group h3 {
+    margin: 0 0 12px 0;
+    font-size: 18px;
+    color: var(--text-glow);
+    text-align: center;
+  }
+  #idCardPage {
+    border: 3px solid var(--accent);
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 0 50px var(--shadow-accent);
+    background: var(--card-inner-bg);
+    position: relative;
+  }
+  .id-card-container {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 50px;
+    align-items: start;
+  }
+  .id-photo-container {
+    text-align: center;
+  }
+  #idPhoto {
+    width: 100%;
+    max-width: 240px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 16px;
+    border: 4px solid var(--accent-active);
+    box-shadow: 0 0 30px var(--shadow-accent);
+    background: linear-gradient(135deg, #1a1a2e, #0f0f1a);
+    display: block;
+    margin: 0 auto;
+  }
+  #uploadPhotoBtn {
+    margin-top: 16px;
+    background: var(--accent);
+    color: white;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  #uploadPhotoBtn:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+  }
+  .id-header {
+    text-align: center;
+    margin-bottom: 32px;
+    grid-column: 1 / -1;
+  }
+  .id-logo {
+    font-size: 36px;
+    font-weight: bold;
+    color: var(--text-glow);
+    letter-spacing: 3px;
+    text-shadow: 0 0 16px var(--glow-strong);
+  }
+  .id-subtitle {
+    font-size: 16px;
+    color: var(--text-glow);
+    margin-top: 8px;
+    opacity: 0.9;
+  }
+  .id-info div {
+    margin: 20px 0;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .id-label {
+    color: var(--text-glow);
+    font-weight: bold;
+    min-width: 150px;
+  }
+  .id-input {
+    background: transparent;
+    border: none;
+    border-bottom: 2px dashed var(--accent);
+    color: var(--text-main);
+    font-size: 18px;
+    outline: none;
+    flex: 1;
+    min-width: 200px;
+    padding: 4px 0;
+  }
+  .id-seal {
+    position: absolute;
+    bottom: 30px;
+    right: 40px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid var(--accent-active);
+    opacity: 0.15;
+    transform: rotate(-12deg);
+    box-shadow: 0 0 40px var(--accent-active);
+  }
+  .id-seal::after {
+    content: "Jujutsu High";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(12deg);
+    font-size: 14px;
+    color: var(--text-glow);
+    opacity: 0.8;
+    white-space: nowrap;
+    font-weight: bold;
+  }
+
+  .stat, .skill {
+    background: var(--input-bg);
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin: 10px 0;
+    border: 1px solid var(--border-subtle);
+    display: grid;
+    gap: 12px;
+    align-items: center;
+  }
+  .stat { grid-template-columns: 1fr 140px 140px; }
+  .skill { grid-template-columns: 1fr 36px 36px 110px; }
+
+  input, textarea, select {
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    color: var(--text-main);
+    font-family: inherit;
+  }
+  input:focus:not([readonly]):not([type="checkbox"]) {
+    outline: none;
+    border-color: var(--accent-active);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-active) 30%, transparent);
+  }
+  input[readonly] {
+    background: rgba(15,15,25,0.5);
+    color: #b0a0d0;
+    border-color: #3a1f6a;
+    cursor: default;
+  }
+  input[type="checkbox"] {
+    accent-color: var(--accent-active);
+    width: 20px;
+    height: 20px;
+  }
+
+  .ce-display {
+    font-size: 1.4rem;
+    text-align: center;
+    padding: 24px;
+    background: rgba(94,58,168,0.2);
+    border-radius: 12px;
+    border: 1px solid var(--border-subtle);
+    margin-bottom: 32px;
+  }
+  .ce-display strong {
+    font-size: 3rem;
+    color: var(--accent-active);
+    text-shadow: 0 0 16px var(--glow-strong);
+  }
+  .ce-amount-control {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .ce-amount-input {
+    width: 140px;
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: bold;
+    padding: 10px;
+  }
+  .ce-amount-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 110px;
+  }
+  .ce-amount-btn:hover {
+    background: var(--accent-active);
+    transform: translateY(-2px);
+  }
+  .ce-amount-btn.spend { background: #c62828; }
+  .ce-amount-btn.recover { background: #2e7d32; }
+
+  .weapon-item {
+    background: linear-gradient(145deg, color-mix(in srgb, var(--input-bg) 90%, #000), color-mix(in srgb, var(--input-bg) 60%, #111));
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid var(--border-subtle);
+    display: grid;
+    gap: 12px;
+  }
+  .weapon-grid { grid-template-columns: 2fr 1fr 1fr 1fr 160px; align-items: center; }
+  .weapon-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px var(--shadow-accent);
+  }
+  .weapon-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  #inventoryControls, #featsControls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .inventory-item, .feat-item-card {
+    background: linear-gradient(145deg, color-mix(in srgb, var(--input-bg) 90%, #000), color-mix(in srgb, var(--input-bg) 60%, #111));
+    border-radius: 12px;
+    padding: 16px;
+    margin: 12px 0;
+    border: 1px solid var(--border-subtle);
+    display: grid;
+    grid-template-columns: 2fr 100px 100px 120px;
+    gap: 16px;
+    align-items: center;
+  }
+  .inventory-item:hover, .feat-item-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px var(--shadow-accent);
+  }
+  .inventory-desc, .feat-desc {
+    grid-column: 1 / -1;
+    margin-top: 12px;
+    background: color-mix(in srgb, var(--bg-main) 80%, #000);
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    padding: 12px;
+    color: #d0c0ff;
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  .dice-input-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 24px 0;
+    justify-content: center;
+  }
+  #diceInput {
+    flex: 1;
+    min-width: 280px;
+    font-family: 'Courier New', monospace;
+    font-size: 1.2em;
+  }
+  #rollButton {
+    background: var(--accent-active);
+    color: white;
+    font-size: 1.2em;
+    padding: 14px 32px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 0 20px var(--glow-strong);
+    transition: all 0.2s;
+  }
+  #rollButton:hover {
+    transform: scale(1.04);
+    box-shadow: 0 0 30px var(--glow-strong);
+  }
+
+  .dice-result-section {
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 32px 0;
+  }
+  #result {
+    font-size: 5rem;
+    font-weight: bold;
+    text-align: center;
+    color: var(--text-glow);
+    text-shadow: 0 0 30px var(--glow-strong);
+    min-width: 200px;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(94,58,168,0.15);
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid var(--border-subtle);
+  }
+
+  .calculator-container {
+    min-width: 260px;
+    max-width: 300px;
+    background: rgba(25,20,40,0.7);
+    border-radius: 14px;
+    padding: 16px;
+    border: 1px solid var(--border-subtle);
+    box-shadow: 0 8px 24px var(--shadow-accent);
+  }
+  .calc-btn {
+    padding: 12px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: var(--input-bg);
+    color: var(--text-main);
+    border: 1px solid var(--border-subtle);
+    transition: all 0.2s;
+  }
+  .calc-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow-accent);
+  }
+  .calc-btn.num {
+    background: rgba(40,35,60,0.8);
+    color: var(--text-glow);
+  }
+  .calc-btn.op {
+    background: rgba(94,58,168,0.25);
+    color: var(--accent-active);
+  }
+  .calc-btn.eq {
+    background: var(--accent-active);
+    color: white;
+    grid-column: span 2;
+  }
+
+  @media (max-width: 868px) {
+    .id-card-container {
+      grid-template-columns: 1fr;
+      gap: 30px;
+      text-align: center;
+    }
+    .formula-row, .color-row, .export-import-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Jujutsu Sorcerer</h1>
+  <div class="page-buttons">
+    <button id="idCardBtn" class="active">ID Card</button>
+    <button id="charSheetBtn">Character Sheet</button>
+    <button id="combatBtn">Combat</button>
+    <button id="inventoryBtn">Inventory</button>
+    <button id="diceBtn">Dice Roller</button>
+    <button id="featsNotesBtn">Feats & Notes</button>
+    <button id="settings-btn" title="Settings">⚙</button>
+  </div>
+</header>
+
+<div class="container">
+  <!-- ID Card -->
+  <div id="idCardPage">
+    <div class="id-card-container" style="position: relative;">
+      <div class="id-photo-container">
+        <img id="idPhoto" src="" alt="Sorcerer Portrait">
+        <br>
+        <button id="uploadPhotoBtn">Upload Photo</button>
+        <input type="file" id="photoInput" accept="image/*" style="display:none;">
+      </div>
+
+      <div>
+        <div class="id-header">
+          <div class="id-logo">Jujutsu High</div>
+          <div class="id-subtitle">Sorcerer Identification</div>
+        </div>
+        <div class="id-info">
+          <div><span class="id-label">Name</span><input type="text" id="studentName" class="id-input" placeholder="Enter name"></div>
+          <div><span class="id-label">Cursed Technique</span><input type="text" id="cursedTechnique" class="id-input" placeholder="e.g. Limitless"></div>
+          <div><span class="id-label">Ranking</span><input type="text" id="sorcererRank" class="id-input" placeholder="e.g. Special Grade"></div>
+          <div><span class="id-label">Status</span><input type="text" id="sorcererStatus" class="id-input" placeholder="e.g. Active"></div>
+        </div>
+      </div>
+
+      <div class="id-seal"></div>
+    </div>
+  </div>
+
+  <!-- Character Sheet -->
+  <div id="charSheetPage" class="hidden">
+    <div class="panel">
+      <h2>Core</h2>
+      <div class="stat"><span>Level</span><input id="level" type="number" min="1" max="20" value="3"></div>
+      <div class="stat"><span>Proficiency</span><input id="proficiency" readonly></div>
+      <h2>Cursed Energy</h2>
+      <div class="stat"><span>Cursed Energy Stat</span><input id="ceStat" type="number"></div>
+      <div class="stat"><span>CE Modifier</span><input id="ceMod" readonly></div>
+      <div class="stat"><span>CE Points</span><input id="cePoints" readonly></div>
+      <div class="stat"><span>CE Output</span><input id="ceOutput" readonly></div>
+      <h2>Ability Scores</h2>
+      <div class="stat"><span>STR</span><input id="str" type="number"><input id="strMod" readonly></div>
+      <div class="stat"><span>DEX</span><input id="dex" type="number"><input id="dexMod" readonly></div>
+      <div class="stat"><span>CON</span><input id="con" type="number"><input id="conMod" readonly></div>
+      <div class="stat"><span>INT</span><input id="int" type="number"><input id="intMod" readonly></div>
+      <div class="stat"><span>WIS</span><input id="wis" type="number"><input id="wisMod" readonly></div>
+      <div class="stat"><span>CHA</span><input id="cha" type="number"><input id="chaMod" readonly></div>
+      <h2>Saving Throws</h2>
+      <div class="skill"><span>STR</span><input type="checkbox" id="strSaveP"><input id="strSave" readonly></div>
+      <div class="skill"><span>DEX</span><input type="checkbox" id="dexSaveP"><input id="dexSave" readonly></div>
+      <div class="skill"><span>CON</span><input type="checkbox" id="conSaveP"><input id="conSave" readonly></div>
+      <div class="skill"><span>INT</span><input type="checkbox" id="intSaveP"><input id="intSave" readonly></div>
+      <div class="skill"><span>WIS</span><input type="checkbox" id="wisSaveP"><input id="wisSave" readonly></div>
+      <div class="skill"><span>CHA</span><input type="checkbox" id="chaSaveP"><input id="chaSave" readonly></div>
+      <h2>Skills</h2>
+      <p style="font-size:0.9rem; opacity:0.7; margin:12px 0;">P = Proficient • E = Expertise</p>
+
+      <div class="ability-group">
+        <h3>Dexterity</h3>
+        <div class="skill"><span>Acrobatics</span><input type="checkbox" id="acroP"><input type="checkbox" id="acroE"><input id="acro" readonly></div>
+        <div class="skill"><span>Sleight of Hand</span><input type="checkbox" id="slightP"><input type="checkbox" id="slightE"><input id="slight" readonly></div>
+        <div class="skill"><span>Stealth</span><input type="checkbox" id="stealthP"><input type="checkbox" id="stealthE"><input id="stealth" readonly></div>
+      </div>
+
+      <div class="ability-group">
+        <h3>Strength</h3>
+        <div class="skill"><span>Athletics</span><input type="checkbox" id="athP"><input type="checkbox" id="athE"><input id="ath" readonly></div>
+      </div>
+
+      <div class="ability-group">
+        <h3>Intelligence</h3>
+        <div class="skill"><span>Arcana</span><input type="checkbox" id="arcP"><input type="checkbox" id="arcE"><input id="arc" readonly></div>
+        <div class="skill"><span>History</span><input type="checkbox" id="histP"><input type="checkbox" id="histE"><input id="hist" readonly></div>
+        <div class="skill"><span>Investigation</span><input type="checkbox" id="invP"><input type="checkbox" id="invE"><input id="inv" readonly></div>
+        <div class="skill"><span>Nature</span><input type="checkbox" id="natP"><input type="checkbox" id="natE"><input id="nat" readonly></div>
+        <div class="skill"><span>Religion</span><input type="checkbox" id="relP"><input type="checkbox" id="relE"><input id="rel" readonly></div>
+      </div>
+
+      <div class="ability-group">
+        <h3>Wisdom</h3>
+        <div class="skill"><span>Animal Handling</span><input type="checkbox" id="animP"><input type="checkbox" id="animE"><input id="anim" readonly></div>
+        <div class="skill"><span>Insight</span><input type="checkbox" id="insP"><input type="checkbox" id="insE"><input id="ins" readonly></div>
+        <div class="skill"><span>Medicine</span><input type="checkbox" id="medP"><input type="checkbox" id="medE"><input id="med" readonly></div>
+        <div class="skill"><span>Perception</span><input type="checkbox" id="percP"><input type="checkbox" id="percE"><input id="perc" readonly></div>
+        <div class="skill"><span>Survival</span><input type="checkbox" id="survP"><input type="checkbox" id="survE"><input id="surv" readonly></div>
+      </div>
+
+      <div class="ability-group">
+        <h3>Charisma</h3>
+        <div class="skill"><span>Deception</span><input type="checkbox" id="decP"><input type="checkbox" id="decE"><input id="dec" readonly></div>
+        <div class="skill"><span>Intimidation</span><input type="checkbox" id="intimP"><input type="checkbox" id="intimE"><input id="intim" readonly></div>
+        <div class="skill"><span>Performance</span><input type="checkbox" id="perfP"><input type="checkbox" id="perfE"><input id="perf" readonly></div>
+        <div class="skill"><span>Persuasion</span><input type="checkbox" id="persP"><input type="checkbox" id="persE"><input id="pers" readonly></div>
+      </div>
+
+      <h2>Passive Scores</h2>
+      <div class="stat"><span>Passive Perception</span><input id="passPerc" readonly></div>
+      <div class="stat"><span>Passive Investigation</span><input id="passInv" readonly></div>
+      <div class="stat"><span>Passive Insight</span><input id="passIns" readonly></div>
+    </div>
+  </div>
+
+  <!-- Combat Page -->
+  <div id="combatPage">
+    <div class="panel">
+      <h2>Combat & Health</h2>
+
+      <div class="health-display">
+        Current HP: <strong id="hpCurrentDisplay">—</strong> / <span id="hpMaxDisplay">—</span><br>
+        <small>Temp HP: <span id="hpTempDisplay">0</span> • Hit Dice Left: <span id="hitDiceLeftDisplay">—</span></small>
+      </div>
+
+      <div class="health-controls">
+        <input type="number" id="hpChangeAmount" min="1" value="10" style="width:120px; font-size:1.4rem; text-align:center;">
+        <button class="health-btn take-dmg" id="takeDamageBtn">Take Damage</button>
+        <button class="health-btn heal-btn" id="healBtn">Heal</button>
+        <button class="health-btn rest-btn" id="longRestBtn">Long Rest</button>
+      </div>
+
+      <h2>Hit Dice & HP</h2>
+      <div class="stat">
+        <span>Hit Die Type</span>
+        <select id="hitDieType">
+          <option value="6">d6</option>
+          <option value="8" selected>d8</option>
+          <option value="10">d10</option>
+          <option value="12">d12</option>
+        </select>
+      </div>
+      <div class="stat">
+        <span>Hit Dice Remaining</span>
+        <input id="hitDiceCurrent" type="number" min="0" value="3">
+        <span>/</span>
+        <input id="hitDiceMax" type="number" readonly value="3">
+      </div>
+      <div class="stat">
+        <span>Max HP (auto)</span>
+        <input id="hpMax" type="number" readonly>
+      </div>
+      <div class="stat">
+        <span>Current HP</span>
+        <input id="hpCurrent" type="number">
+      </div>
+      <div class="stat">
+        <span>Temporary HP</span>
+        <input id="hpTemp" type="number" value="0">
+      </div>
+
+      <h2>Defenses</h2>
+      <div class="stat"><span>Armor Class</span><input id="ac" type="number"></div>
+
+      <h2>Cursed Energy</h2>
+      <div class="ce-display">
+        Current CE Points: <strong id="ceCurrentDisplay">—</strong> / <span id="ceMaxDisplay">—</span><br>
+        <small>CE Stat: <span id="ceStatDisplay">—</span> | Modifier: <span id="ceModDisplay">—</span> | Max Output: <span id="ceOutputDisplay">—</span></small>
+        <div class="ce-amount-control">
+          <input type="number" id="ceAmountInput" min="1" value="1" class="ce-amount-input">
+          <button class="ce-amount-btn spend" id="spendCEAmount">Spend</button>
+          <button class="ce-amount-btn recover" id="recoverCEAmount">Recover</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Weapons & Techniques</h2>
+      <div class="weapon-controls">
+        <input type="text" id="newWeaponName" placeholder="Name (e.g. Divergent Fist)">
+        <input type="text" id="newWeaponAtk" placeholder="Attack Bonus (e.g. +7)">
+        <input type="text" id="newWeaponDmg" placeholder="Damage (e.g. 1d8+4)">
+        <input type="number" id="newWeaponCost" placeholder="CE Cost" min="0" value="0">
+        <button id="addWeaponBtn">Add</button>
+      </div>
+      <div id="weaponsList"></div>
+
+      <h2>Features & Traits</h2>
+      <div class="feature-controls">
+        <input type="text" id="newFeatureName" placeholder="Feature Name">
+        <button id="addFeatureBtn">Add</button>
+      </div>
+      <div id="featuresList"></div>
+    </div>
+  </div>
+
+  <!-- Inventory -->
+  <div id="inventoryPage" class="hidden">
+    <div class="panel">
+      <div id="inventoryControls">
+        <input type="text" id="newItem" placeholder="Item name (e.g. Cursed Tool)" style="flex:2; min-width:220px;" />
+        <input type="number" id="itemWeight" placeholder="Weight" min="0" step="1" style="width:90px;" />
+        <input type="number" id="itemQty" placeholder="Qty" min="1" step="1" value="1" style="width:80px;" />
+        <button id="addItemBtn">Add Item</button>
+      </div>
+      <div id="inventory"></div>
+      <div id="encumbrance" style="margin-top:24px; padding:16px; text-align:center; font-weight:bold; border-radius:10px; border:1px solid var(--border-subtle);">
+        Encumbrance: <span id="currentEnc">0</span> / <span id="maxEnc">0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dice Roller -->
+  <div id="dicePage" class="hidden">
+    <div class="panel">
+      <h2 style="text-align:center;">Dice Roller</h2>
+      <div class="dice-input-container">
+        <input type="text" id="diceInput" placeholder="e.g. d20 + 5, 2d6 adv, 3d8!, d20 dis, d100" />
+        <button id="rollButton">ROLL</button>
+      </div>
+
+      <div style="text-align:center; margin:24px 0; display:flex; flex-wrap:wrap; gap:10px; justify-content:center;">
+        <button onclick="document.getElementById('diceInput').value='d4';">d4</button>
+        <button onclick="document.getElementById('diceInput').value='d6';">d6</button>
+        <button onclick="document.getElementById('diceInput').value='d8';">d8</button>
+        <button onclick="document.getElementById('diceInput').value='d10';">d10</button>
+        <button onclick="document.getElementById('diceInput').value='d12';">d12</button>
+        <button onclick="document.getElementById('diceInput').value='d20';">d20</button>
+        <button onclick="document.getElementById('diceInput').value='d100';">d100</button>
+      </div>
+
+      <div class="dice-result-section">
+        <div id="result">—</div>
+
+        <div class="calculator-container">
+          <h3 style="text-align:center; margin:0 0 12px 0; font-size:1.1rem; color:var(--text-glow);">Calculator</h3>
+          <input type="text" id="calcDisplay" readonly style="width:100%; font-size:1.4rem; text-align:right; padding:10px; margin-bottom:10px; background:var(--input-bg); border:1px solid var(--border-subtle); border-radius:8px; color:var(--text-glow); font-family:'Courier New', monospace;">
+
+          <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:6px;">
+            <button class="calc-btn op" onclick="calcClear()">C</button>
+            <button class="calc-btn op" onclick="calcBack()">←</button>
+            <button class="calc-btn op" onclick="calcAppend('(')">(</button>
+            <button class="calc-btn op" onclick="calcAppend(')')">)</button>
+
+            <button class="calc-btn num" onclick="calcAppend('7')">7</button>
+            <button class="calc-btn num" onclick="calcAppend('8')">8</button>
+            <button class="calc-btn num" onclick="calcAppend('9')">9</button>
+            <button class="calc-btn op" onclick="calcAppend('/')">÷</button>
+
+            <button class="calc-btn num" onclick="calcAppend('4')">4</button>
+            <button class="calc-btn num" onclick="calcAppend('5')">5</button>
+            <button class="calc-btn num" onclick="calcAppend('6')">6</button>
+            <button class="calc-btn op" onclick="calcAppend('*')">×</button>
+
+            <button class="calc-btn num" onclick="calcAppend('1')">1</button>
+            <button class="calc-btn num" onclick="calcAppend('2')">2</button>
+            <button class="calc-btn num" onclick="calcAppend('3')">3</button>
+            <button class="calc-btn op" onclick="calcAppend('-')">−</button>
+
+            <button class="calc-btn num" onclick="calcAppend('0')">0</button>
+            <button class="calc-btn num" onclick="calcAppend('.')">.</button>
+            <button class="calc-btn eq" onclick="calcEquals()" style="grid-column: span 2;">=</button>
+            <button class="calc-btn op" onclick="calcAppend('+')">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="rollHistory" style="margin-top:32px; max-height:340px; overflow-y:auto; background:rgba(15,15,25,0.6); border-radius:10px; padding:16px;">
+        <div style="opacity:0.6; text-align:center;">Roll history will appear here...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feats & Notes -->
+  <div id="featsNotesPage" class="hidden">
+    <div class="panel">
+      <h2>Feats</h2>
+      <div id="featsControls">
+        <input type="text" id="newFeatName" placeholder="Feat Name (e.g. Black Flash)" style="flex:2; min-width:220px;" />
+        <input type="number" id="featCECost" placeholder="CE Cost" min="0" step="1" style="width:100px;" />
+        <input type="number" id="featUses" placeholder="Uses" min="1" step="1" value="1" style="width:80px;" />
+        <button id="addFeatBtn">Add Feat</button>
+      </div>
+      <div id="featsList"></div>
+
+      <h2 style="margin-top:48px;">Notes</h2>
+      <textarea id="notesArea" placeholder="Campaign notes, binding vows, backstory, reminders..."></textarea>
+    </div>
+  </div>
+
+  <!-- Settings Page -->
+  <div id="settingsPage" class="hidden">
+    <div class="panel">
+      <h2>Settings</h2>
+
+      <h3 style="margin:32px 0 16px;">Theme Selection</h3>
+      <div class="theme-grid" id="themeGrid">
+        <div class="theme-option active" data-theme="default">Purple (Default)</div>
+        <div class="theme-option" data-theme="gojo">Blue (Gojo)</div>
+        <div class="theme-option" data-theme="sukuna">Red (Sukuna)</div>
+        <div class="theme-option" data-theme="yuji">Orange (Yuji)</div>
+        <div class="theme-option" data-theme="megumi">Dark Blue (Megumi)</div>
+        <div class="theme-option" data-theme="nobara">Pink (Nobara)</div>
+        <div class="theme-option" data-theme="mahito">Violet (Mahito)</div>
+      </div>
+
+      <div class="settings-section">
+        <h3>Export / Import Character</h3>
+        <div class="export-import-row">
+          <button id="exportBtn" class="ce-amount-btn recover">Export Character (.json)</button>
+          <button id="importBtn" class="ce-amount-btn">Import Character</button>
+          <input type="file" id="importFile" accept=".json">
+          <span id="importStatus"></span>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>Cursed Energy Formula</h3>
+        <div style="max-width:800px; margin:0 auto;">
+          <div class="formula-row">
+            <label>Maximum CE Points</label>
+            <div class="formula-options">
+              <label><input type="radio" name="ceMaxFormula" value="prof" checked> Proficiency × CE Stat</label>
+              <label><input type="radio" name="ceMaxFormula" value="level"> Level × CE Stat</label>
+              <label><input type="radio" name="ceMaxFormula" value="fixed"> Fixed value: <input type="number" id="ceMaxFixed" class="fixed-input" min="1" value="30"></label>
+            </div>
+          </div>
+
+          <div class="formula-row">
+            <label>Maximum Output per Action</label>
+            <div class="formula-options">
+              <label><input type="radio" name="ceOutputFormula" value="standard" checked> 5 + (CE Mod × Proficiency)</label>
+              <label><input type="radio" name="ceOutputFormula" value="simple"> CE Stat + Proficiency</label>
+              <label><input type="radio" name="ceOutputFormula" value="fixed"> Fixed value: <input type="number" id="ceOutputFixed" class="fixed-input" min="1" value="10"></label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>Custom Theme Creator</h3>
+        <div style="max-width:660px; margin:0 auto;">
+          <div class="color-row"><label>Main Background</label><input type="color" id="ct-bg-main" value="#0a0a0f"></div>
+          <div class="color-row"><label>Header / Cards</label><input type="color" id="ct-bg-header" value="#13131a"></div>
+          <div class="color-row"><label>Accent (main)</label><input type="color" id="ct-accent" value="#5e3aa8"></div>
+          <div class="color-row"><label>Accent Hover</label><input type="color" id="ct-accent-hover" value="#7a4ecc"></div>
+          <div class="color-row"><label>Accent Active / Glow</label><input type="color" id="ct-accent-active" value="#9d4edd"></div>
+          <div class="color-row"><label>Text Main</label><input type="color" id="ct-text-main" value="#e0e0e8"></div>
+          <div class="color-row"><label>Text Glow</label><input type="color" id="ct-text-glow" value="#c79eff"></div>
+
+          <div class="custom-buttons">
+            <button id="applyCustomTheme" class="ce-amount-btn">Apply Temporarily</button>
+            <button id="saveCustomTheme" class="ce-amount-btn recover">Save as New Theme</button>
+            <button id="resetCustom" class="ce-amount-btn spend">Reset to Default Colors</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const themes = {
+  default: { '--bg-main':'#0a0a0f','--bg-header':'#13131a','--accent':'#5e3aa8','--accent-hover':'#7a4ecc','--accent-active':'#9d4edd','--text-main':'#e0e0e8','--text-glow':'#c79eff' },
+  gojo: { '--bg-main':'#0a111f','--bg-header':'#0f1a33','--accent':'#00b4ff','--accent-hover':'#00d4ff','--accent-active':'#40e0ff','--text-main':'#f0f8ff','--text-glow':'#b0e0ff' },
+  sukuna: { '--bg-main':'#140a0a','--bg-header':'#1f0d0d','--accent':'#8b0000','--accent-hover':'#a11212','--accent-active':'#c62828','--text-main':'#ffebee','--text-glow':'#ff8a80' },
+  yuji: { '--bg-main':'#110d0a','--bg-header':'#1a140f','--accent':'#c65102','--accent-hover':'#e67e22','--accent-active':'#ff9800','--text-main':'#fff3e0','--text-glow':'#ffb74d' },
+  megumi: { '--bg-main':'#0a0f12','--bg-header':'#0f1a1f','--accent':'#1a237e','--accent-hover':'#303f9f','--accent-active':'#3f51b5','--text-main':'#e8eaf6','--text-glow':'#9fa8da' },
+  nobara: { '--bg-main':'#120a10','--bg-header':'#1a0f18','--accent':'#c2185b','--accent-hover':'#d81b60','--accent-active':'#e91e63','--text-main':'#fce4ec','--text-glow':'#f48fb1' },
+  mahito: { '--bg-main':'#0f0a14','--bg-header':'#180f1f','--accent':'#6a1b9a','--accent-hover':'#7b1fa2','--accent-active':'#8e24aa','--text-main':'#f3e5f5','--text-glow':'#ce93d8' }
+};
+
+let customThemes = JSON.parse(localStorage.getItem('jujutsu-custom-themes')) || [];
+
+// Cursed Energy Settings
+const ceSettings = {
+  maxFormula: localStorage.getItem('ce-max-formula') || 'prof',
+  outputFormula: localStorage.getItem('ce-output-formula') || 'standard',
+  maxFixed: parseInt(localStorage.getItem('ce-max-fixed')) || 30,
+  outputFixed: parseInt(localStorage.getItem('ce-output-fixed')) || 10
+};
+
+let currentCE = parseInt(localStorage.getItem("jujutsu-currentCE")) || 0;
+let currentHP = parseInt(localStorage.getItem("jujutsu-currentHP")) || 24;
+let tempHP = parseInt(localStorage.getItem("jujutsu-tempHP")) || 0;
+let hitDiceCurrent = parseInt(localStorage.getItem("jujutsu-hitDiceCurrent")) || 3;
+
+function applyTheme(themeName) {
+  let theme;
+  if (themeName.startsWith('custom-')) {
+    const idx = parseInt(themeName.replace('custom-', '')) - 1;
+    theme = customThemes[idx] || themes.default;
+  } else {
+    theme = themes[themeName] || themes.default;
+  }
+  Object.entries(theme).forEach(([key, value]) => {
+    document.documentElement.style.setProperty(key, value);
+  });
+  localStorage.setItem('jujutsu-theme', themeName);
+  renderThemeButtons();
+}
+
+function renderThemeButtons() {
+  const grid = document.getElementById("themeGrid");
+  document.querySelectorAll('.theme-option.custom').forEach(el => el.remove());
+
+  customThemes.forEach((_, i) => {
+    const btn = document.createElement("div");
+    btn.className = "theme-option custom";
+    btn.dataset.theme = `custom-${i + 1}`;
+    btn.textContent = `Custom ${i + 1}`;
+    grid.appendChild(btn);
+  });
+
+  const current = localStorage.getItem('jujutsu-theme') || 'default';
+  document.querySelectorAll('.theme-option').forEach(opt => {
+    opt.classList.toggle('active', opt.dataset.theme === current);
+  });
+}
+
+document.getElementById("themeGrid").addEventListener('click', (e) => {
+  const opt = e.target.closest('.theme-option');
+  if (!opt || !opt.dataset.theme) return;
+  applyTheme(opt.dataset.theme);
+});
+
+// Load CE settings
+function loadCESettings() {
+  document.querySelector(`input[name="ceMaxFormula"][value="${ceSettings.maxFormula}"]`).checked = true;
+  document.querySelector(`input[name="ceOutputFormula"][value="${ceSettings.outputFormula}"]`).checked = true;
+  document.getElementById("ceMaxFixed").value = ceSettings.maxFixed;
+  document.getElementById("ceOutputFixed").value = ceSettings.outputFixed;
+}
+
+// Save and apply CE settings
+function saveAndApplyCESettings() {
+  ceSettings.maxFormula = document.querySelector('input[name="ceMaxFormula"]:checked').value;
+  ceSettings.outputFormula = document.querySelector('input[name="ceOutputFormula"]:checked').value;
+  ceSettings.maxFixed = parseInt(document.getElementById("ceMaxFixed").value) || 30;
+  ceSettings.outputFixed = parseInt(document.getElementById("ceOutputFixed").value) || 10;
+
+  localStorage.setItem('ce-max-formula', ceSettings.maxFormula);
+  localStorage.setItem('ce-output-formula', ceSettings.outputFormula);
+  localStorage.setItem('ce-max-fixed', ceSettings.maxFixed);
+  localStorage.setItem('ce-output-fixed', ceSettings.outputFixed);
+
+  updateSheet();
+}
+
+document.querySelectorAll('input[name="ceMaxFormula"], input[name="ceOutputFormula"]').forEach(el => {
+  el.addEventListener('change', saveAndApplyCESettings);
+});
+document.getElementById("ceMaxFixed").addEventListener('input', saveAndApplyCESettings);
+document.getElementById("ceOutputFixed").addEventListener('input', saveAndApplyCESettings);
+
+// NEW: Auto-calculate Max HP
+function calculateMaxHP() {
+  const level = v("level");
+  if (level < 1) return 0;
+
+  const hitDie = parseInt(document.getElementById("hitDieType").value);
+  const conMod = mod(v("con"));
+
+  // Average hit die value (rounded up as per standard 5e)
+  const avgHitDie = Math.ceil((hitDie + 1) / 2);
+
+  // Level 1: full die + CON mod
+  let maxHP = hitDie + conMod;
+
+  // Levels 2+: average + CON mod per additional level
+  if (level > 1) {
+    maxHP += (avgHitDie + conMod) * (level - 1);
+  }
+
+  return Math.max(1, maxHP); // minimum 1 HP
+}
+
+// Export / Import
+document.getElementById("exportBtn").onclick = () => {
+  const name = localStorage.getItem("idcard_studentName") || "sorcerer";
+  const data = {
+    version: "1.2",
+    exported: new Date().toISOString(),
+    sheet: JSON.parse(localStorage.getItem("jujutsu-sheet") || "{}"),
+    weapons: JSON.parse(localStorage.getItem("jujutsu-weapons") || "[]"),
+    features: JSON.parse(localStorage.getItem("jujutsu-features") || "[]"),
+    inventory: JSON.parse(localStorage.getItem("inventory") || "[]"),
+    feats: JSON.parse(localStorage.getItem("jujutsu-feats") || "[]"),
+    notes: localStorage.getItem("notes") || "",
+    idcard: {
+      studentName: localStorage.getItem("idcard_studentName") || "",
+      cursedTechnique: localStorage.getItem("idcard_cursedTechnique") || "",
+      sorcererRank: localStorage.getItem("idcard_sorcererRank") || "",
+      sorcererStatus: localStorage.getItem("idcard_sorcererStatus") || ""
+    },
+    photo: localStorage.getItem("jujutsu-id-photo") || "",
+    currentCE: parseInt(localStorage.getItem("jujutsu-currentCE")) || 0,
+    currentHP: parseInt(localStorage.getItem("jujutsu-currentHP")) || 0,
+    tempHP: parseInt(localStorage.getItem("jujutsu-tempHP")) || 0,
+    hitDiceCurrent: parseInt(localStorage.getItem("jujutsu-hitDiceCurrent")) || 0,
+    theme: localStorage.getItem("jujutsu-theme") || "default",
+    customThemes: JSON.parse(localStorage.getItem("jujutsu-custom-themes") || "[]"),
+    ceSettings: {
+      maxFormula: localStorage.getItem("ce-max-formula") || "prof",
+      outputFormula: localStorage.getItem("ce-output-formula") || "standard",
+      maxFixed: parseInt(localStorage.getItem("ce-max-fixed")) || 30,
+      outputFixed: parseInt(localStorage.getItem("ce-output-fixed")) || 10
+    }
+  };
+
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `jujutsu-${name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+document.getElementById("importBtn").onclick = () => {
+  document.getElementById("importFile").click();
+};
+
+document.getElementById("importFile").onchange = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      const data = JSON.parse(ev.target.result);
+
+      if (data.sheet) localStorage.setItem("jujutsu-sheet", JSON.stringify(data.sheet));
+      if (data.weapons) localStorage.setItem("jujutsu-weapons", JSON.stringify(data.weapons));
+      if (data.features) localStorage.setItem("jujutsu-features", JSON.stringify(data.features));
+      if (data.inventory) localStorage.setItem("inventory", JSON.stringify(data.inventory));
+      if (data.feats) localStorage.setItem("jujutsu-feats", JSON.stringify(data.feats));
+      if (data.notes !== undefined) localStorage.setItem("notes", data.notes);
+
+      if (data.idcard) {
+        Object.entries(data.idcard).forEach(([k, v]) => localStorage.setItem("idcard_" + k, v || ""));
+      }
+
+      if (data.photo) localStorage.setItem("jujutsu-id-photo", data.photo);
+      if (data.currentCE !== undefined) localStorage.setItem("jujutsu-currentCE", data.currentCE);
+      if (data.currentHP !== undefined) localStorage.setItem("jujutsu-currentHP", data.currentHP);
+      if (data.tempHP !== undefined) localStorage.setItem("jujutsu-tempHP", data.tempHP);
+      if (data.hitDiceCurrent !== undefined) localStorage.setItem("jujutsu-hitDiceCurrent", data.hitDiceCurrent);
+      if (data.theme) localStorage.setItem("jujutsu-theme", data.theme);
+      if (data.customThemes) localStorage.setItem("jujutsu-custom-themes", JSON.stringify(data.customThemes));
+
+      if (data.ceSettings) {
+        localStorage.setItem("ce-max-formula", data.ceSettings.maxFormula || "prof");
+        localStorage.setItem("ce-output-formula", data.ceSettings.outputFormula || "standard");
+        localStorage.setItem("ce-max-fixed", data.ceSettings.maxFixed || 30);
+        localStorage.setItem("ce-output-fixed", data.ceSettings.outputFixed || 10);
+      }
+
+      document.getElementById("importStatus").textContent = "Imported successfully! Reloading...";
+      setTimeout(() => location.reload(), 1500);
+    } catch (err) {
+      document.getElementById("importStatus").textContent = "Import failed: Invalid file";
+      console.error(err);
+    }
+  };
+  reader.readAsText(file);
+};
+
+// Page navigation
+const pages = {
+  idCard: document.getElementById("idCardPage"),
+  charSheet: document.getElementById("charSheetPage"),
+  combat: document.getElementById("combatPage"),
+  inventory: document.getElementById("inventoryPage"),
+  dice: document.getElementById("dicePage"),
+  featsNotes: document.getElementById("featsNotesPage"),
+  settings: document.getElementById("settingsPage")
+};
+
+const buttons = {
+  idCard: document.getElementById("idCardBtn"),
+  charSheet: document.getElementById("charSheetBtn"),
+  combat: document.getElementById("combatBtn"),
+  inventory: document.getElementById("inventoryBtn"),
+  dice: document.getElementById("diceBtn"),
+  featsNotes: document.getElementById("featsNotesBtn")
+};
+
+function showPage(pageName) {
+  Object.values(pages).forEach(p => p.classList.add("hidden"));
+  Object.values(buttons).forEach(b => b?.classList.remove("active"));
+  pages[pageName].classList.remove("hidden");
+  if (buttons[pageName]) buttons[pageName].classList.add("active");
+}
+
+Object.keys(buttons).forEach(key => {
+  if (buttons[key]) buttons[key].addEventListener('click', () => showPage(key));
+});
+
+document.getElementById("settings-btn").addEventListener('click', () => showPage('settings'));
+
+function v(id) { return parseInt(document.getElementById(id)?.value || 0) || 0; }
+function mod(score) { return Math.floor((score - 10) / 2); }
+function profByLevel(level) {
+  if (level >= 17) return 6;
+  if (level >= 13) return 5;
+  if (level >= 9) return 4;
+  if (level >= 5) return 3;
+  return 2;
+}
+function skillCalc(statId, profId, expId) {
+  const statMod = mod(v(statId));
+  const prof = document.getElementById(profId).checked;
+  const exp = document.getElementById(expId)?.checked && prof;
+  return statMod + (prof ? (exp ? 2 : 1) * v("proficiency") : 0);
+}
+
+const photoInput = document.getElementById("photoInput");
+const idPhoto = document.getElementById("idPhoto");
+const uploadBtn = document.getElementById("uploadPhotoBtn");
+
+uploadBtn.addEventListener("click", () => photoInput.click());
+
+photoInput.addEventListener("change", function() {
+  const file = this.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const dataURL = e.target.result;
+      idPhoto.src = dataURL;
+      localStorage.setItem("jujutsu-id-photo", dataURL);
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+const savedPhoto = localStorage.getItem("jujutsu-id-photo");
+if (savedPhoto) idPhoto.src = savedPhoto;
+
+function updateCEDisplay() {
+  const level = v("level");
+  const prof = profByLevel(level);
+  const ceStat = v("ceStat");
+  const ceMod = mod(ceStat);
+
+  let maxCE, output;
+
+  if (ceSettings.maxFormula === 'prof') {
+    maxCE = prof * ceStat;
+  } else if (ceSettings.maxFormula === 'level') {
+    maxCE = level * ceStat;
+  } else {
+    maxCE = ceSettings.maxFixed;
+  }
+
+  if (ceSettings.outputFormula === 'standard') {
+    output = 5 + ceMod * prof;
+  } else if (ceSettings.outputFormula === 'simple') {
+    output = ceStat + prof;
+  } else {
+    output = ceSettings.outputFixed;
+  }
+
+  if (currentCE > maxCE) currentCE = maxCE;
+  localStorage.setItem("jujutsu-currentCE", currentCE);
+
+  document.getElementById("ceCurrentDisplay").textContent = currentCE;
+  document.getElementById("ceMaxDisplay").textContent = maxCE;
+  document.getElementById("ceStatDisplay").textContent = ceStat;
+  document.getElementById("ceModDisplay").textContent = ceMod >= 0 ? '+' + ceMod : ceMod;
+  document.getElementById("ceOutputDisplay").textContent = output;
+
+  document.getElementById("cePoints").value = maxCE;
+  document.getElementById("ceOutput").value = output;
+
+  const amountInput = document.getElementById("ceAmountInput");
+  amountInput.max = output;
+  if (parseInt(amountInput.value) > output) amountInput.value = Math.min(parseInt(amountInput.value), output) || 1;
+}
+
+function updateHealthDisplay() {
+  const max = calculateMaxHP();
+  document.getElementById("hpMax").value = max;
+  document.getElementById("hpMaxDisplay").textContent = max;
+
+  currentHP = Math.min(max, Math.max(0, v("hpCurrent")));
+  tempHP = v("hpTemp") || 0;
+
+  document.getElementById("hpCurrentDisplay").textContent = currentHP;
+  document.getElementById("hpTempDisplay").textContent = tempHP;
+  document.getElementById("hitDiceLeftDisplay").textContent =
+    `${Math.min(v("level"), hitDiceCurrent)}/${v("level")}d${document.getElementById("hitDieType").value}`;
+
+  document.getElementById("hpCurrent").value = currentHP;
+  document.getElementById("hpTemp").value = tempHP;
+  document.getElementById("hitDiceCurrent").value = hitDiceCurrent;
+  document.getElementById("hitDiceMax").value = v("level");
+
+  localStorage.setItem("jujutsu-currentHP", currentHP);
+  localStorage.setItem("jujutsu-tempHP", tempHP);
+  localStorage.setItem("jujutsu-hitDiceCurrent", hitDiceCurrent);
+}
+
+function updateSheet() {
+  const level = v("level");
+  const prof = profByLevel(level);
+  document.getElementById("proficiency").value = prof;
+
+  const ceStat = v("ceStat");
+  const ceMod = mod(ceStat);
+  document.getElementById("ceMod").value = ceMod;
+
+  ["str","dex","con","int","wis","cha"].forEach(a => {
+    const m = mod(v(a));
+    document.getElementById(a+"Mod").value = m;
+    document.getElementById(a+"Save").value = m + (document.getElementById(a+"SaveP").checked ? prof : 0);
+  });
+
+  document.getElementById("acro").value = skillCalc("dex", "acroP", "acroE");
+  document.getElementById("slight").value = skillCalc("dex", "slightP", "slightE");
+  document.getElementById("stealth").value = skillCalc("dex", "stealthP", "stealthE");
+  document.getElementById("ath").value = skillCalc("str", "athP", "athE");
+  document.getElementById("arc").value = skillCalc("int", "arcP", "arcE");
+  document.getElementById("hist").value = skillCalc("int", "histP", "histE");
+  document.getElementById("inv").value = skillCalc("int", "invP", "invE");
+  document.getElementById("nat").value = skillCalc("int", "natP", "natE");
+  document.getElementById("rel").value = skillCalc("int", "relP", "relE");
+  document.getElementById("anim").value = skillCalc("wis", "animP", "animE");
+  document.getElementById("ins").value = skillCalc("wis", "insP", "insE");
+  document.getElementById("med").value = skillCalc("wis", "medP", "medE");
+  document.getElementById("perc").value = skillCalc("wis", "percP", "percE");
+  document.getElementById("surv").value = skillCalc("wis", "survP", "survE");
+  document.getElementById("dec").value = skillCalc("cha", "decP", "decE");
+  document.getElementById("intim").value = skillCalc("cha", "intimP", "intimE");
+  document.getElementById("perf").value = skillCalc("cha", "perfP", "perfE");
+  document.getElementById("pers").value = skillCalc("cha", "persP", "persE");
+
+  document.getElementById("passPerc").value = 10 + v("perc");
+  document.getElementById("passInv").value = 10 + v("inv");
+  document.getElementById("passIns").value = 10 + v("ins");
+
+  updateCEDisplay();
+  updateHealthDisplay();
+}
+
+function saveSheet() {
+  const data = {};
+  document.querySelectorAll("#charSheetPage input").forEach(el => {
+    if (el.type === "checkbox") data[el.id] = el.checked;
+    else data[el.id] = el.value;
+  });
+  localStorage.setItem("jujutsu-sheet", JSON.stringify(data));
+}
+
+function loadSheetData() {
+  const saved = localStorage.getItem("jujutsu-sheet");
+  if (!saved) return;
+  const data = JSON.parse(saved);
+  Object.entries(data).forEach(([id, value]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (el.type === "checkbox") el.checked = value;
+    else el.value = value;
+  });
+}
+
+document.querySelectorAll("#charSheetPage input").forEach(el => {
+  el.addEventListener("input", () => { updateSheet(); saveSheet(); });
+  el.addEventListener("change", () => { updateSheet(); saveSheet(); });
+});
+
+document.getElementById("spendCEAmount").onclick = () => {
+  const amount = parseInt(document.getElementById("ceAmountInput").value) || 0;
+  if (amount <= 0) return alert("Enter a positive amount");
+  if (amount > currentCE) return alert(`Not enough CE! You have ${currentCE}.`);
+  currentCE -= amount;
+  localStorage.setItem("jujutsu-currentCE", currentCE);
+  updateCEDisplay();
+};
+
+document.getElementById("recoverCEAmount").onclick = () => {
+  const amount = parseInt(document.getElementById("ceAmountInput").value) || 0;
+  if (amount <= 0) return alert("Enter a positive amount");
+  const maxCE = document.getElementById("cePoints").value;
+  if (currentCE + amount > maxCE) return alert(`Cannot exceed maximum CE (${maxCE})!`);
+  currentCE += amount;
+  localStorage.setItem("jujutsu-currentCE", currentCE);
+  updateCEDisplay();
+};
+
+document.getElementById("takeDamageBtn").onclick = () => {
+  let dmg = v("hpChangeAmount");
+  if (dmg <= 0) return;
+  if (tempHP > 0) {
+    if (dmg >= tempHP) {
+      dmg -= tempHP;
+      tempHP = 0;
+    } else {
+      tempHP -= dmg;
+      dmg = 0;
+    }
+  }
+  currentHP = Math.max(0, currentHP - dmg);
+  document.getElementById("hpCurrent").value = currentHP;
+  document.getElementById("hpTemp").value = tempHP;
+  updateHealthDisplay();
+};
+
+document.getElementById("healBtn").onclick = () => {
+  let heal = v("hpChangeAmount");
+  if (heal <= 0) return;
+  const max = calculateMaxHP();
+  currentHP = Math.min(max, currentHP + heal);
+  document.getElementById("hpCurrent").value = currentHP;
+  updateHealthDisplay();
+};
+
+document.getElementById("longRestBtn").onclick = () => {
+  currentHP = calculateMaxHP();
+  tempHP = 0;
+  hitDiceCurrent = v("level");
+  currentCE = v("cePoints");
+
+  document.getElementById("hpCurrent").value = currentHP;
+  document.getElementById("hpTemp").value = tempHP;
+  document.getElementById("hitDiceCurrent").value = hitDiceCurrent;
+
+  updateHealthDisplay();
+  updateCEDisplay();
+  alert("Long rest complete! Full HP, Hit Dice & Cursed Energy restored.");
+};
+
+let weapons = JSON.parse(localStorage.getItem("jujutsu-weapons") || "[]");
+let features = JSON.parse(localStorage.getItem("jujutsu-features") || "[]");
+
+function saveActionsData() {
+  localStorage.setItem("jujutsu-weapons", JSON.stringify(weapons));
+  localStorage.setItem("jujutsu-features", JSON.stringify(features));
+}
+
+function renderWeapons() {
+  const list = document.getElementById("weaponsList");
+  list.innerHTML = "";
+  weapons.forEach((w, i) => {
+    const item = document.createElement("div");
+    item.className = "weapon-item weapon-grid";
+    const costText = w.cost > 0 ? ` (Cost: ${w.cost} CE)` : "";
+    item.innerHTML = `
+      <div style="font-weight:600;">${w.name}${costText}</div>
+      <div>${w.atk || ''}</div>
+      <div>${w.dmg || ''}</div>
+      <div>${w.cost || 0}</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button onclick="useWeapon(${i})">Use</button>
+        <button onclick="rollDice('d20${w.atk || ''}')">Attack</button>
+        <button onclick="rollDice('${w.dmg || ''}')">Damage</button>
+        <button onclick="weapons.splice(${i},1); saveActionsData(); renderWeapons();">Remove</button>
+      </div>`;
+    list.appendChild(item);
+  });
+}
+
+window.useWeapon = function(i) {
+  const weapon = weapons[i];
+  const cost = parseInt(weapon.cost) || 0;
+  const output = v("ceOutput");
+  if (cost > output) {
+    alert(`This technique exceeds your maximum output (${output} CE)!`);
+    return;
+  }
+  if (cost > currentCE) {
+    alert(`Not enough CE! Need ${cost}, have ${currentCE}.`);
+    return;
+  }
+  currentCE -= cost;
+  localStorage.setItem("jujutsu-currentCE", currentCE);
+  updateCEDisplay();
+  alert(`${weapon.name} activated! Spent ${cost} CE.`);
+};
+
+document.getElementById("addWeaponBtn").onclick = () => {
+  const name = document.getElementById("newWeaponName").value.trim();
+  const atk = document.getElementById("newWeaponAtk").value.trim();
+  const dmg = document.getElementById("newWeaponDmg").value.trim();
+  const cost = parseInt(document.getElementById("newWeaponCost").value) || 0;
+  if (!name) return alert("Enter a name");
+  weapons.push({name, atk, dmg, cost});
+  saveActionsData();
+  renderWeapons();
+  document.getElementById("newWeaponName").value = "";
+  document.getElementById("newWeaponAtk").value = "";
+  document.getElementById("newWeaponDmg").value = "";
+  document.getElementById("newWeaponCost").value = "0";
+};
+
+function renderFeatures() {
+  const list = document.getElementById("featuresList");
+  list.innerHTML = "";
+  features.forEach((f, i) => {
+    const item = document.createElement("div");
+    item.className = "feature-item";
+    const nameInput = document.createElement("input");
+    nameInput.type = "text"; nameInput.value = f.name; nameInput.style.fontWeight = "600";
+    nameInput.oninput = () => { features[i].name = nameInput.value; saveActionsData(); };
+    const desc = document.createElement("textarea");
+    desc.value = f.desc || "";
+    desc.placeholder = "Description...";
+    desc.oninput = () => { features[i].desc = desc.value; saveActionsData(); };
+    const remove = document.createElement("button");
+    remove.textContent = "Remove";
+    remove.onclick = () => { features.splice(i,1); saveActionsData(); renderFeatures(); };
+    item.append(nameInput, desc, remove);
+    list.appendChild(item);
+  });
+}
+
+document.getElementById("addFeatureBtn").onclick = () => {
+  const name = document.getElementById("newFeatureName").value.trim();
+  if (!name) return alert("Enter a feature name");
+  features.push({name, desc: ""});
+  saveActionsData();
+  renderFeatures();
+  document.getElementById("newFeatureName").value = "";
+};
+
+let inventory = JSON.parse(localStorage.getItem("inventory") || "[]");
+
+function saveInventory() { localStorage.setItem("inventory", JSON.stringify(inventory)); }
+
+function renderInventory() {
+  const container = document.getElementById("inventory");
+  container.innerHTML = "";
+  inventory.forEach((item, i) => {
+    const div = document.createElement("div");
+    div.className = "inventory-item";
+    const name = document.createElement("span");
+    name.textContent = item.name + (item.quantity > 1 ? ` (×${item.quantity})` : "");
+    name.style.cursor = "pointer";
+    name.style.fontWeight = "600";
+    const desc = document.createElement("textarea");
+    desc.className = "inventory-desc hidden";
+    desc.value = item.description || "";
+    desc.placeholder = "Description / notes...";
+    desc.oninput = () => { item.description = desc.value; saveInventory(); };
+    const weight = document.createElement("input");
+    weight.type = "number"; weight.value = item.weight || 0; weight.min = 0;
+    weight.oninput = () => { item.weight = Number(weight.value)||0; saveInventory(); updateEncumbrance(); };
+    const qty = document.createElement("input");
+    qty.type = "number"; qty.min = 1; qty.value = item.quantity || 1;
+    qty.oninput = () => { item.quantity = Math.max(1, Number(qty.value)||1); saveInventory(); renderInventory(); updateEncumbrance(); };
+    const remove = document.createElement("button");
+    remove.textContent = "Remove";
+    remove.onclick = () => { inventory.splice(i, 1); saveInventory(); renderInventory(); updateEncumbrance(); };
+    name.onclick = () => desc.classList.toggle("hidden");
+    div.append(name, weight, qty, remove, desc);
+    container.appendChild(div);
+  });
+}
+
+function updateEncumbrance() {
+  const str = v("str");
+  const max = 15 * str;
+  const current = inventory.reduce((sum, it) => sum + (it.weight||0) * (it.quantity||1), 0);
+  document.getElementById("currentEnc").textContent = current;
+  document.getElementById("maxEnc").textContent = max;
+}
+
+document.getElementById("addItemBtn").onclick = () => {
+  const name = document.getElementById("newItem").value.trim();
+  if (!name) return alert("Please enter item name");
+  const weight = Number(document.getElementById("itemWeight").value) || 0;
+  const qty = Math.max(1, Number(document.getElementById("itemQty").value) || 1);
+  const existing = inventory.find(i => i.name.toLowerCase() === name.toLowerCase());
+  if (existing) existing.quantity += qty;
+  else inventory.push({ name, weight, quantity: qty, description: "" });
+  saveInventory(); renderInventory(); updateEncumbrance();
+  document.getElementById("newItem").value = ""; document.getElementById("itemWeight").value = ""; document.getElementById("itemQty").value = "1";
+};
+
+let feats = JSON.parse(localStorage.getItem("jujutsu-feats") || "[]");
+
+function saveFeats() {
+  localStorage.setItem("jujutsu-feats", JSON.stringify(feats));
+}
+
+function renderFeats() {
+  const container = document.getElementById("featsList");
+  container.innerHTML = "";
+  feats.forEach((feat, i) => {
+    const div = document.createElement("div");
+    div.className = "feat-item-card";
+
+    const name = document.createElement("span");
+    name.textContent = feat.name + (feat.uses > 1 ? ` (×${feat.uses})` : "");
+    name.style.cursor = "pointer";
+    name.style.fontWeight = "600";
+
+    const desc = document.createElement("textarea");
+    desc.className = "feat-desc hidden";
+    desc.value = feat.description || "";
+    desc.placeholder = "Description, effects, requirements...";
+    desc.oninput = () => {
+      feat.description = desc.value;
+      saveFeats();
+    };
+
+    const ceCost = document.createElement("input");
+    ceCost.type = "number";
+    ceCost.min = 0;
+    ceCost.value = feat.ceCost || 0;
+    ceCost.style.width = "80px";
+    ceCost.oninput = () => {
+      feat.ceCost = Number(ceCost.value) || 0;
+      saveFeats();
+    };
+
+    const uses = document.createElement("input");
+    uses.type = "number";
+    uses.min = 1;
+    uses.value = feat.uses || 1;
+    uses.style.width = "70px";
+    uses.oninput = () => {
+      feat.uses = Math.max(1, Number(uses.value) || 1);
+      saveFeats();
+      renderFeats();
+    };
+
+    const remove = document.createElement("button");
+    remove.textContent = "Remove";
+    remove.onclick = () => {
+      feats.splice(i, 1);
+      saveFeats();
+      renderFeats();
+    };
+
+    name.onclick = () => desc.classList.toggle("hidden");
+
+    div.append(name, ceCost, uses, remove, desc);
+    container.appendChild(div);
+  });
+}
+
+document.getElementById("addFeatBtn").onclick = () => {
+  const name = document.getElementById("newFeatName").value.trim();
+  if (!name) return alert("Please enter feat name");
+  const ceCost = Number(document.getElementById("featCECost").value) || 0;
+  const uses = Math.max(1, Number(document.getElementById("featUses").value) || 1);
+
+  const existing = feats.find(f => f.name.toLowerCase() === name.toLowerCase());
+  if (existing) {
+    existing.uses += uses;
+  } else {
+    feats.push({ name, ceCost, uses, description: "" });
+  }
+
+  saveFeats();
+  renderFeats();
+
+  document.getElementById("newFeatName").value = "";
+  document.getElementById("featCECost").value = "";
+  document.getElementById("featUses").value = "1";
+};
+
+function rollDice(input) {
+  input = input.trim().toLowerCase().replace(/\s+/g, '');
+  if (!input) input = "d20";
+  const advantage = input.includes('adv');
+  const disadvantage = input.includes('dis');
+  const exploding = input.includes('!');
+  if (advantage) input = input.replace('adv','');
+  if (disadvantage) input = input.replace('dis','');
+  if (exploding) input = input.replace('!','');
+  let modifier = 0;
+  const modMatch = input.match(/[+-]\d+$/);
+  if (modMatch) { modifier = parseInt(modMatch[0]); input = input.slice(0, -modMatch[0].length); }
+  const parts = input.split(/([+-])/).filter(Boolean);
+  let total = modifier;
+  let rollParts = [];
+  for (let part of parts) {
+    if (part === '+' || part === '-') continue;
+    const diceMatch = part.match(/^(\d*)d(\d+)$/);
+    if (!diceMatch) continue;
+    let count = diceMatch[1] ? parseInt(diceMatch[1]) : 1;
+    const sides = parseInt(diceMatch[2]);
+    function rollOne() {
+      let r = Math.floor(Math.random() * sides) + 1;
+      let results = [r];
+      if (exploding) while (r === sides) { r = Math.floor(Math.random() * sides) + 1; results.push(r); }
+      return { sum: results.reduce((a,b)=>a+b,0), rolls: results };
+    }
+    let rolls = [];
+    for (let i = 0; i < count; i++) rolls.push(rollOne());
+    let sum = rolls.reduce((a, r) => a + r.sum, 0);
+    let display = rolls.map(r => r.rolls.length > 1 ? `(${r.rolls.join('+')})` : r.rolls[0]).join(' + ');
+    if (advantage || disadvantage) {
+      const rolls2 = []; for (let i = 0; i < count; i++) rolls2.push(rollOne());
+      const sum2 = rolls2.reduce((a, r) => a + r.sum, 0);
+      sum = advantage ? Math.max(sum, sum2) : Math.min(sum, sum2);
+      display = `${advantage ? 'Adv' : 'Dis'} → ${sum} (of ${sum} & ${sum2})`;
+    }
+    total += sum;
+    rollParts.push(`${count}d${sides} = ${display}`);
+  }
+  let text = rollParts.join(' + ');
+  if (modifier !== 0) text += (modifier > 0 ? ' + ' : ' ') + Math.abs(modifier);
+  document.getElementById("result").textContent = total;
+  const history = document.getElementById("rollHistory");
+  const entry = document.createElement("div");
+  entry.style.padding = "10px"; entry.style.borderBottom = "1px solid rgba(255,255,255,0.08)";
+  entry.innerHTML = `<strong>${total}</strong> — ${text || '—'} <small style="opacity:0.6;">(${new Date().toLocaleTimeString()})</small>`;
+  history.insertBefore(entry, history.firstChild);
+  while (history.children.length > 12) history.removeChild(history.lastChild);
+}
+
+document.getElementById("rollButton").onclick = () => rollDice(document.getElementById("diceInput").value);
+document.getElementById("diceInput").onkeypress = e => { if (e.key === "Enter") rollDice(e.target.value); };
+
+function calcAppend(value) {
+  const display = document.getElementById('calcDisplay');
+  display.value += value;
+}
+function calcClear() {
+  document.getElementById('calcDisplay').value = '';
+}
+function calcBack() {
+  const display = document.getElementById('calcDisplay');
+  display.value = display.value.slice(0, -1);
+}
+function calcEquals() {
+  const display = document.getElementById('calcDisplay');
+  try {
+    const result = Function('"use strict"; return (' + display.value.replace(/÷/g, '/').replace(/×/g, '*') + ')')();
+    display.value = Number.isInteger(result) ? result : parseFloat(result.toFixed(4));
+  } catch (e) {
+    display.value = 'Error';
+    setTimeout(() => { display.value = ''; }, 1500);
+  }
+}
+document.getElementById('calcDisplay').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') calcEquals();
+});
+
+const notesArea = document.getElementById("notesArea");
+notesArea.value = localStorage.getItem("notes") || "";
+notesArea.oninput = () => localStorage.setItem("notes", notesArea.value);
+
+["studentName","cursedTechnique","sorcererRank","sorcererStatus"].forEach(id => {
+  const el = document.getElementById(id);
+  const key = "idcard_" + id;
+  if (localStorage.getItem(key)) el.value = localStorage.getItem(key);
+  el.oninput = () => localStorage.setItem(key, el.value);
+});
+
+document.getElementById("applyCustomTheme").onclick = () => {
+  const vals = {
+    '--bg-main': document.getElementById('ct-bg-main').value,
+    '--bg-header': document.getElementById('ct-bg-header').value,
+    '--accent': document.getElementById('ct-accent').value,
+    '--accent-hover': document.getElementById('ct-accent-hover').value,
+    '--accent-active': document.getElementById('ct-accent-active').value,
+    '--text-main': document.getElementById('ct-text-main').value,
+    '--text-glow': document.getElementById('ct-text-glow').value,
+  };
+  Object.entries(vals).forEach(([k,v]) => document.documentElement.style.setProperty(k,v));
+};
+
+document.getElementById("saveCustomTheme").onclick = () => {
+  const custom = {
+    '--bg-main': document.getElementById('ct-bg-main').value,
+    '--bg-header': document.getElementById('ct-bg-header').value,
+    '--accent': document.getElementById('ct-accent').value,
+    '--accent-hover': document.getElementById('ct-accent-hover').value,
+    '--accent-active': document.getElementById('ct-accent-active').value,
+    '--text-main': document.getElementById('ct-text-main').value,
+    '--text-glow': document.getElementById('ct-text-glow').value,
+  };
+  customThemes.push(custom);
+  localStorage.setItem('jujutsu-custom-themes', JSON.stringify(customThemes));
+  renderThemeButtons();
+  applyTheme(`custom-${customThemes.length}`);
+};
+
+document.getElementById("resetCustom").onclick = () => {
+  ['ct-bg-main','ct-bg-header','ct-accent','ct-accent-hover','ct-accent-active','ct-text-main','ct-text-glow']
+    .forEach(id => document.getElementById(id).value = themes.default[id.replace('ct-','--')]);
+};
+
+function init() {
+  const savedTheme = localStorage.getItem('jujutsu-theme') || 'default';
+  applyTheme(savedTheme);
+  renderThemeButtons();
+  loadSheetData();
+  loadCESettings();
+
+  document.getElementById("hpCurrent").value = currentHP;
+  document.getElementById("hpTemp").value = tempHP;
+  document.getElementById("hitDiceCurrent").value = hitDiceCurrent;
+
+  updateSheet();
+  renderInventory();
+  updateEncumbrance();
+  renderWeapons();
+  renderFeatures();
+  renderFeats();
+  showPage("idCard");
+}
+
+window.addEventListener('load', init);
+</script>
+</body>
+</html>
